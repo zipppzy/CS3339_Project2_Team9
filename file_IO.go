@@ -123,3 +123,8 @@ func WriteInstructions(filePath string, list []Instruction) {
 		}
 	}
 }
+
+// executes all instructions and writes state of registers and memory at each step
+func WriteInstructionExecution(filePath string, list []Instruction) {
+
+}

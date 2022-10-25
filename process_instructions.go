@@ -185,3 +185,8 @@ func parse2Complement(i uint64, binaryLength uint) int64 {
 	}
 	return out
 }
+
+// modifies registers and memory based on instruction given
+func ExecuteInstruction(ins *Instruction) {
+
+}

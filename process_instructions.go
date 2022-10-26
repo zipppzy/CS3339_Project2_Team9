@@ -187,6 +187,40 @@ func parse2Complement(i uint64, binaryLength uint) int64 {
 }
 
 // modifies registers and memory based on instruction given
-func ExecuteInstruction(ins *Instruction) {
+func ExecuteInstruction(ins Instruction) {
+	switch ins.op {
+	case "B":
 
+	case "CBZ":
+
+	case "CBNZ":
+
+	case "ADDI":
+		Registers[ins.rd] = Registers[ins.rn] + int(ins.immediate)
+	case "SUBI":
+		Registers[ins.rd] = Registers[ins.rn] - int(ins.immediate)
+	case "AND":
+		Registers[ins.rd] = Registers[ins.rn] & Registers[ins.rm]
+	case "ADD":
+		Registers[ins.rd] = Registers[ins.rn] + Registers[ins.rm]
+	case "ORR":
+		Registers[ins.rd] = Registers[ins.rn] | Registers[ins.rm]
+	case "SUB":
+		Registers[ins.rd] = Registers[ins.rn] - Registers[ins.rm]
+	case "LSR":
+		Registers[ins.rd] = Registers[ins.rn] >> Registers[ins.shamt]
+	case "LSL":
+		Registers[ins.rd] = Registers[ins.rn] << Registers[ins.shamt]
+	case "ASR":
+		Registers[ins.rd] = Registers[ins.rn] >> Registers[ins.shamt]
+	case "EOR":
+		Registers[ins.rd] = Registers[ins.rn] ^ Registers[ins.shamt]
+	case "MOVZ":
+
+	case "MOVK":
+
+	case "LDUR":
+
+	case "STUR":
+	}
 }

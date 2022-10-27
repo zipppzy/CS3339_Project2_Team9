@@ -35,6 +35,7 @@ func ProcessInstructionList(list []Instruction) {
 			var value uint64
 			value, _ = strconv.ParseUint(list[i].rawInstruction, 2, 32)
 			list[i].memValue = parse2Complement(value, 32)
+			Mem = append(Mem, value)
 		}
 	}
 }
@@ -191,11 +192,15 @@ func parse2Complement(i uint64, binaryLength uint) int64 {
 func ExecuteInstruction(ins Instruction) {
 	switch ins.op {
 	case "B":
-
+		PCindex += int(ins.offset)
 	case "CBZ":
-
+		if Registers[ins.conditional] == 0 {
+			PCindex += int(ins.offset)
+		}
 	case "CBNZ":
-
+		if Registers[ins.conditional] != 0 {
+			PCindex += int(ins.offset)
+		}
 	case "ADDI":
 		Registers[ins.rd] = Registers[ins.rn] + int(ins.immediate)
 	case "SUBI":
@@ -217,7 +222,7 @@ func ExecuteInstruction(ins Instruction) {
 	case "EOR":
 		Registers[ins.rd] = Registers[ins.rn] ^ Registers[ins.shamt]
 	case "MOVZ":
-
+		Registers[ins.rd] = int(ins.field) << 16 * int(ins.shiftCode)
 	case "MOVK":
 
 	case "LDUR":

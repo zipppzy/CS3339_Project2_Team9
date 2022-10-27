@@ -31,10 +31,10 @@ var InstructionList []Instruction
 // holds registers R0 - R31 (default 0)
 var Registers [32]int
 
-var Mem = []uint64{}
+var Mem = make(map[int]int64)
 
 func main() {
-	inputFilePathPtr := flag.String("i", "addtest1_bin.txt", "input file path")
+	inputFilePathPtr := flag.String("i", "executionTest.txt", "input file path")
 	outputFilePathPtr := flag.String("o", "out", "output file path")
 
 	flag.Parse()

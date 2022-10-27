@@ -144,7 +144,7 @@ func WriteInstructionExecution(filePath string, list []Instruction) {
 	for PCindex < BreakPoint {
 		_, err := fmt.Fprintf(f, "====================\n")
 		// print cycle and memory location of instruction and op
-		_, err = fmt.Fprintf(f, "cycle:%d\t%d\t%s", cycle, list[PCindex].memLoc, list[PCindex].op)
+		_, err = fmt.Fprintf(f, "cycle:%d\t%d\t%s\t", cycle, list[PCindex].memLoc, list[PCindex].op)
 
 		//prints just the operands
 		switch list[PCindex].instructionType {
@@ -202,8 +202,23 @@ func WriteInstructionExecution(filePath string, list []Instruction) {
 		_, err = fmt.Fprintf(f, "r16:\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", Registers[16], Registers[17], Registers[18], Registers[19], Registers[20], Registers[21], Registers[22], Registers[23])
 		_, err = fmt.Fprintf(f, "r24:\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n\n", Registers[24], Registers[25], Registers[26], Registers[27], Registers[28], Registers[29], Registers[30], Registers[31])
 
-		//print memory values here
+		_, err = fmt.Fprintf(f, "data:\n")
+		key := int(list[BreakPoint+1].memLoc)
+		// find the largest memory location with something assigned
+		largestKey := key
+		for i := range Mem {
+			if i > largestKey {
+				largestKey = i
+			}
+		}
 
+		for key < largestKey {
+			if (key-BreakPoint+4)%32 == 0 {
+				_, err = fmt.Fprintf(f, "\n%d:\t", key)
+			}
+			_, err = fmt.Fprintf(f, "%d\t", Mem[key])
+			key += 4
+		}
 		PCindex++
 		cycle++
 	}

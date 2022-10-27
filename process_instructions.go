@@ -226,7 +226,8 @@ func ExecuteInstruction(ins Instruction) {
 	case "MOVK":
 
 	case "LDUR":
-
+		Registers[ins.rt] = int(Mem[(((Registers[ins.rn]+int(ins.address))-96)/4)-BreakPoint])
 	case "STUR":
+
 	}
 }

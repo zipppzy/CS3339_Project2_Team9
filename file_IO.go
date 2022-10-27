@@ -7,6 +7,12 @@ import (
 	"os"
 )
 
+// index in instruction list
+var PCindex = 0
+
+// index where Break instruction is
+var BreakPoint int
+
 // ReadBinary reads text file and makes Instructions and adds them to the InstructionList
 func ReadBinary(filePath string) {
 	file, err := os.Open(filePath)
@@ -114,7 +120,6 @@ func WriteInstructions(filePath string, list []Instruction) {
 			if err != nil {
 				log.Fatal(err)
 			}
-
 		case "NOP":
 			_, err := fmt.Fprintf(f, "%s\t%d\t%s\n", list[i].rawInstruction, list[i].memLoc, list[i].op)
 			if err != nil {
@@ -127,4 +132,77 @@ func WriteInstructions(filePath string, list []Instruction) {
 // executes all instructions and writes state of registers and memory at each step
 func WriteInstructionExecution(filePath string, list []Instruction) {
 
+	f, err := os.Create(filePath)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer f.Close()
+	var cycle = 1
+
+	for PCindex < BreakPoint {
+		_, err := fmt.Fprintf(f, "====================\n")
+		// print cycle and memory location of instruction and op
+		_, err = fmt.Fprintf(f, "cycle:%d\t%d\t%s\t", cycle, list[PCindex].memLoc, list[PCindex].op)
+
+		//prints just the operands
+		switch list[PCindex].instructionType {
+		case "B":
+			//write operands
+			_, err = fmt.Fprintf(f, "#%d\n", list[PCindex].offset)
+			if err != nil {
+				log.Fatal(err)
+			}
+		case "I":
+			//write operands
+			_, err = fmt.Fprintf(f, "R%d, R%d, #%d\n", list[PCindex].rd, list[PCindex].rn, list[PCindex].immediate)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+		case "CB":
+			//write operands
+			_, err = fmt.Fprintf(f, "R%d, #%d\n", list[PCindex].conditional, list[PCindex].offset)
+			if err != nil {
+				log.Fatal(err)
+			}
+		case "IM":
+			//write operands
+			_, err = fmt.Fprintf(f, "R%d, %d, LSL %d\n", list[PCindex].rd, list[PCindex].field, list[PCindex].shiftCode)
+			if err != nil {
+				log.Fatal(err)
+			}
+		case "D":
+			//write operands
+			_, err = fmt.Fprintf(f, "R%d, [R%d, #%d]\n", list[PCindex].rt, list[PCindex].rn, list[PCindex].address)
+			if err != nil {
+				log.Fatal(err)
+			}
+		case "R":
+			//write operands
+			_, err = fmt.Fprintf(f, "R%d, R%d, ", list[PCindex].rd, list[PCindex].rn)
+			if list[PCindex].op == "LSL" || list[PCindex].op == "ASR" || list[PCindex].op == "LSR" {
+				_, err = fmt.Fprintf(f, "#%d\n", list[PCindex].shamt)
+			} else {
+				_, err = fmt.Fprintf(f, "R%d\n", list[PCindex].rm)
+			}
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+
+		ExecuteInstruction(list[PCindex])
+
+		_, err = fmt.Fprintf(f, "\nregisters:\n")
+
+		//prints registers
+		_, err = fmt.Fprintf(f, "r00:\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", Registers[0], Registers[1], Registers[2], Registers[3], Registers[4], Registers[5], Registers[6], Registers[7])
+		_, err = fmt.Fprintf(f, "r08:\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", Registers[8], Registers[9], Registers[10], Registers[11], Registers[12], Registers[13], Registers[14], Registers[15])
+		_, err = fmt.Fprintf(f, "r16:\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", Registers[16], Registers[17], Registers[18], Registers[19], Registers[20], Registers[21], Registers[22], Registers[23])
+		_, err = fmt.Fprintf(f, "r24:\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n\n", Registers[24], Registers[25], Registers[26], Registers[27], Registers[28], Registers[29], Registers[30], Registers[31])
+
+		PCindex++
+		cycle++
+	}
 }

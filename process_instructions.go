@@ -28,6 +28,7 @@ func ProcessInstructionList(list []Instruction) {
 				processRType(&list[i])
 			case "BREAK":
 				breakHit = true
+				BreakPoint = i
 			}
 		} else {
 			list[i].instructionType = "MEM"

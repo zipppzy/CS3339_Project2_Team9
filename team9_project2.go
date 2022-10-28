@@ -45,6 +45,6 @@ func main() {
 
 	WriteInstructions(*outputFilePathPtr+"_dis.txt", InstructionList)
 
-	WriteInstructionExecution("execution.txt", InstructionList)
+	WriteInstructionExecution(*outputFilePathPtr+"_sim.txt", InstructionList)
 
 }

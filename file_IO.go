@@ -212,7 +212,7 @@ func WriteInstructionExecution(filePath string, list []Instruction) {
 			}
 		}
 
-		for key < largestKey {
+		for key <= largestKey {
 			if (key-(int(list[BreakPoint].memLoc)+4))%32 == 0 {
 				_, err = fmt.Fprintf(f, "\n%d:\t", key)
 			}

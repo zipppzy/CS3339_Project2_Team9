@@ -224,6 +224,7 @@ func ExecuteInstruction(ins Instruction) {
 	case "MOVZ":
 		Registers[ins.rd] = int(ins.field) << 16 * int(ins.shiftCode)
 	case "MOVK":
+		//value := int(ins.field) << 16 * int(ins.shiftCode)
 
 	case "LDUR":
 		Registers[ins.rt] = int(Mem[Registers[ins.rn]+int(ins.address)*4])

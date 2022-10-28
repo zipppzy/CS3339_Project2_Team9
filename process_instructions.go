@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 )
 
@@ -224,8 +225,11 @@ func ExecuteInstruction(ins Instruction) {
 	case "MOVZ":
 		Registers[ins.rd] = int(ins.field) << 16 * int(ins.shiftCode)
 	case "MOVK":
-		//value := int(ins.field) << 16 * int(ins.shiftCode)
-
+		masking := ^int(math.Pow(2, math.Ceil(math.Log2(float64(ins.field)))) - 1)
+		value := int(ins.field) << 16 * int(ins.shiftCode)
+		masking = masking << 16 * int(ins.shiftCode)
+		Registers[ins.rd] = Registers[ins.rd] & masking
+		Registers[ins.rd] = Registers[ins.rd] | value
 	case "LDUR":
 		Registers[ins.rt] = int(Mem[Registers[ins.rn]+int(ins.address)*4])
 	case "STUR":

@@ -141,7 +141,7 @@ func WriteInstructionExecution(filePath string, list []Instruction) {
 	defer f.Close()
 	var cycle = 1
 
-	for PCindex < BreakPoint {
+	for PCindex <= BreakPoint {
 		_, err := fmt.Fprintf(f, "\n====================\n")
 		// print cycle and memory location of instruction and op
 		_, err = fmt.Fprintf(f, "cycle:%d\t%d\t%s\t", cycle, list[PCindex].memLoc, list[PCindex].op)
@@ -190,6 +190,11 @@ func WriteInstructionExecution(filePath string, list []Instruction) {
 			if err != nil {
 				log.Fatal(err)
 			}
+		default:
+			_, err = fmt.Fprintf(f, "\n")
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 
 		ExecuteInstruction(list[PCindex])
@@ -222,4 +227,5 @@ func WriteInstructionExecution(filePath string, list []Instruction) {
 		PCindex++
 		cycle++
 	}
+
 }

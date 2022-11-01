@@ -193,14 +193,23 @@ func parse2Complement(i uint64, binaryLength uint) int64 {
 func ExecuteInstruction(ins Instruction) {
 	switch ins.op {
 	case "B":
-		PCindex += int(ins.offset)
+		branchTarget := PCindex + int(ins.offset)
+		if branchTarget >= BreakPoint || branchTarget > 0 {
+			PCindex = branchTarget
+		}
 	case "CBZ":
+		branchTarget := PCindex + int(ins.offset)
 		if Registers[ins.conditional] == 0 {
-			PCindex += int(ins.offset)
+			if branchTarget >= BreakPoint || branchTarget > 0 {
+				PCindex = branchTarget
+			}
 		}
 	case "CBNZ":
+		branchTarget := PCindex + int(ins.offset)
 		if Registers[ins.conditional] != 0 {
-			PCindex += int(ins.offset)
+			if branchTarget >= BreakPoint || branchTarget > 0 {
+				PCindex = branchTarget
+			}
 		}
 	case "ADDI":
 		Registers[ins.rd] = Registers[ins.rn] + int(ins.immediate)
